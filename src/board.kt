@@ -1,3 +1,3 @@
 fun main(args: Array<String>) {
-    print("testing")
+    print("Testing Kotlin")
 }
