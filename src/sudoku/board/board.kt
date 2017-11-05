@@ -26,7 +26,7 @@ class Board {
         }
     }
 
-    fun printRow(row: Int){
+    private fun printRow(row: Int){
         var column = 1
         while (column <= 9) {
             cells[row-1][column-1].printCell()

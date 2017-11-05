@@ -48,88 +48,60 @@ class BoardTest {
 
     @Test
     fun testCheckRowStateFalse(){
-        board.setCellValue(1,1,9)
-        board.setCellValue(2,1,8)
-        board.setCellValue(3,1,7)
-        board.setCellValue(4,1,5)
-        board.setCellValue(5,1,5)
-        board.setCellValue(6,1,4)
-        board.setCellValue(7,1,3)
-        board.setCellValue(8,1,2)
-        board.setCellValue(9,1,1)
-        board.printRow(1)
-        assert(!board.checkRowState(1))
+        for (column in 1..9){
+            board.setCellValue(column, 1, 10-column)
+        }
+        board.setCellValue(4, 1, 5)
+        assertFalse(board.checkRowState(1))
     }
 
     @Test
     fun testCheckRowStateTrue(){
-        board.setCellValue(1,1,9)
-        board.setCellValue(2,1,8)
-        board.setCellValue(3,1,7)
-        board.setCellValue(4,1,6)
-        board.setCellValue(5,1,5)
-        board.setCellValue(6,1,4)
-        board.setCellValue(7,1,3)
-        board.setCellValue(8,1,2)
-        board.setCellValue(9,1,1)
-        board.printRow(1)
+        for (column in 1..9){
+            board.setCellValue(column, 1, 10-column)
+        }
         assert(board.checkRowState(1))
     }
 
     @Test
     fun testCheckColumnStateFalse(){
-        board.setCellValue(1,1,9)
-        board.setCellValue(1,2,8)
-        board.setCellValue(1,3,7)
-        board.setCellValue(1,4,5)
-        board.setCellValue(1,5,5)
-        board.setCellValue(1,6,4)
-        board.setCellValue(1,7,3)
-        board.setCellValue(1,8,2)
-        board.setCellValue(1,9,1)
-        assert(!board.checkColumnState(1))
+        for (row in 1..9){
+            board.setCellValue(1,row, 10-row)
+        }
+
+        board.setCellValue(1,4, 5)
+        assertFalse(board.checkColumnState(1))
     }
 
     @Test
     fun testCheckColumnStateTrue() {
-        board.setCellValue(1,1,9)
-        board.setCellValue(1,2,8)
-        board.setCellValue(1,3,7)
-        board.setCellValue(1,4,6)
-        board.setCellValue(1,5,5)
-        board.setCellValue(1,6,4)
-        board.setCellValue(1,7,3)
-        board.setCellValue(1,8,2)
-        board.setCellValue(1,9,1)
+        for (row in 1..9){
+            board.setCellValue(1,row, 10-row)
+        }
 
         assert(board.checkColumnState(1))
     }
 
     @Test
     fun testCheckBoxStateFalse(){
-        board.setCellValue(1,1,9)
-        board.setCellValue(2,1,8)
-        board.setCellValue(3,1,7)
-        board.setCellValue(1,2,5)
-        board.setCellValue(2,2,5)
-        board.setCellValue(3,2,4)
-        board.setCellValue(1,3,3)
-        board.setCellValue(2,3,2)
-        board.setCellValue(3,3,1)
+        for (row in 1..3){
+            for (column in 1..3) {
+                board.setCellValue(column, row, column + row)
+            }
+        }
+
         assertFalse(board.checkBoxState(1))
     }
 
     @Test
     fun testCheckBoxStateTrue() {
-        board.setCellValue(1,1,9)
-        board.setCellValue(1,2,8)
-        board.setCellValue(1,3,7)
-        board.setCellValue(2,1,6)
-        board.setCellValue(2,2,5)
-        board.setCellValue(2,3,4)
-        board.setCellValue(3,1,3)
-        board.setCellValue(3,2,2)
-        board.setCellValue(3,3,1)
+        var value = 1
+        for (row in 1..3){
+            for (column in 1..3) {
+                board.setCellValue(column, row, value++)
+            }
+        }
+
         assert(board.checkBoxState(1))
     }
 
@@ -146,53 +118,82 @@ class BoardTest {
     }
 
     @Test
-    fun calculateBox_1(){
-        assertEquals(1,board.calculateBox(1,1))
-        assertEquals(1,board.calculateBox(2,1))
-        assertEquals(1,board.calculateBox(3,1))
-        assertEquals(1,board.calculateBox(1,2))
-        assertEquals(1,board.calculateBox(2,2))
-        assertEquals(1,board.calculateBox(3,2))
-        assertEquals(1,board.calculateBox(1,3))
-        assertEquals(1,board.calculateBox(2,3))
-        assertEquals(1,board.calculateBox(3,3))
+    fun calculateBox1(){
+        for (row in 1..3){
+            for (column in 1..3) {
+                assertEquals(1,board.calculateBox(column,row))
+            }
+        }
     }
 
     @Test
-    fun calculateBox_2(){
-        assertEquals(2,board.calculateBox(4,1))
-        assertEquals(2,board.calculateBox(5,1))
-        assertEquals(2,board.calculateBox(6,1))
-        assertEquals(2,board.calculateBox(4,2))
-        assertEquals(2,board.calculateBox(5,2))
-        assertEquals(2,board.calculateBox(6,2))
-        assertEquals(2,board.calculateBox(4,3))
-        assertEquals(2,board.calculateBox(5,3))
-        assertEquals(2,board.calculateBox(6,3))
+    fun calculateBox2(){
+        for (row in 1..3){
+            for (column in 4..6) {
+                assertEquals(2,board.calculateBox(column,row))
+            }
+        }
     }
     @Test
-    fun calculateBox_3(){
-        assertEquals(3,board.calculateBox(7,1))
-        assertEquals(3,board.calculateBox(8,1))
-        assertEquals(3,board.calculateBox(9,1))
-        assertEquals(3,board.calculateBox(7,2))
-        assertEquals(3,board.calculateBox(8,2))
-        assertEquals(3,board.calculateBox(9,2))
-        assertEquals(3,board.calculateBox(7,3))
-        assertEquals(3,board.calculateBox(8,3))
-        assertEquals(3,board.calculateBox(9,3))
+    fun calculateBox3(){
+        for (row in 1..3){
+            for (column in 7..9) {
+                assertEquals(3,board.calculateBox(column,row))
+            }
+        }
     }
 
     @Test
-    fun calculateBox_4(){
-        assertEquals(4,board.calculateBox(1,4))
-        assertEquals(4,board.calculateBox(2,4))
-        assertEquals(4,board.calculateBox(3,4))
-        assertEquals(4,board.calculateBox(1,5))
-        assertEquals(4,board.calculateBox(2,5))
-        assertEquals(4,board.calculateBox(3,5))
-        assertEquals(4,board.calculateBox(1,6))
-        assertEquals(4,board.calculateBox(2,6))
-        assertEquals(4,board.calculateBox(3,6))
+    fun calculateBox4(){
+        for (row in 4..6){
+            for (column in 1..3) {
+                assertEquals(4,board.calculateBox(column,row))
+            }
+        }
+    }
+
+    @Test
+    fun calculateBox5(){
+        for (row in 4..6){
+            for (column in 4..6) {
+                assertEquals(5,board.calculateBox(column,row))
+            }
+        }
+    }
+
+    @Test
+    fun calculateBox6(){
+        for (row in 4..6){
+            for (column in 7..9) {
+                assertEquals(6,board.calculateBox(column,row))
+            }
+        }
+    }
+
+    @Test
+    fun calculateBox7(){
+        for (row in 7..9){
+            for (column in 1..3) {
+                assertEquals(7,board.calculateBox(column,row))
+            }
+        }
+    }
+
+    @Test
+    fun calculateBox8(){
+        for (row in 7..9){
+            for (column in 4..6) {
+                assertEquals(8,board.calculateBox(column,row))
+            }
+        }
+    }
+
+    @Test
+    fun calculateBox9(){
+        for (row in 7..9){
+            for (column in 7..9) {
+                assertEquals(9,board.calculateBox(column,row))
+            }
+        }
     }
 }
