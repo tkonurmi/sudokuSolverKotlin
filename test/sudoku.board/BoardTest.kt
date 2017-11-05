@@ -8,15 +8,10 @@ class BoardTest {
 
     @Test
     fun testInitializingWholeBoard(){
-        var row = 1
-        var column = 1
-        while (row <= 9){
-            while (column <= 9){
+        for (row in 1..9){
+            for (column in 1..9){
                 board.setCellValue(column,row, (((row*column)%9)+1))
-                column +=1
             }
-            row += 1
-            column =1
         }
         board.printBoard()
     }

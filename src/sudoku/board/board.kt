@@ -19,18 +19,14 @@ class Board {
     }
 
     fun printBoard(){
-        var row =1
-        while (row<=9){
+        for (row in 1..9){
             printRow(row)
-            row +=1
         }
     }
 
     private fun printRow(row: Int){
-        var column = 1
-        while (column <= 9) {
+        for (column in 1..9) {
             cells[row-1][column-1].printCell()
-            column +=1
         }
         if (row %3==0)
            println("---------------")
@@ -57,36 +53,23 @@ class Board {
 
     fun checkRowState(row: Int): Boolean{
         val listOfValues : MutableList<Int> = mutableListOf()
-        var column = 1
-        while (column <=9){
-            listOfValues.add(getCell(column,row).value)
-            column++
-        }
+        (1..9).mapTo(listOfValues) { getCell(it,row).value }
         return checkState(listOfValues)
     }
     fun checkColumnState(column: Int): Boolean{
         val listOfValues : MutableList<Int> = mutableListOf()
-        var row = 1
-        while (row <=9){
-            listOfValues.add(getCell(column,row).value)
-            row++
-        }
+        (1..9).mapTo(listOfValues) { getCell(column, it).value }
         return checkState(listOfValues)
     }
 
     fun checkBoxState(box: Int): Boolean{
         val listOfValues: MutableList<Int> = mutableListOf()
-        var row =1
-        var column = 1
-        while (row <=9){
-            while (column <= 9){
+        for (row in 1..9){
+            for (column in 1..9){
                 if (calculateBox(column,row) == box) {
                     listOfValues.add(getCell(column, row).value)
                 }
-                column++
             }
-            row++
-            column = 1
         }
         println(listOfValues.toString())
         return checkState(listOfValues)
