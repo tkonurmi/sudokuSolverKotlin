@@ -7,16 +7,6 @@ class BoardTest {
     private var board = Board()
 
     @Test
-    fun testInitializingWholeBoard(){
-        for (row in 1..9){
-            for (column in 1..9){
-                board.setCellValue(column,row, (((row*column)%9)+1))
-            }
-        }
-        board.printBoard()
-    }
-
-    @Test
     fun getCellReturnsEmptyValue() {
         assertEquals(".",board.getCell(1,1).getValue())
     }
@@ -25,7 +15,6 @@ class BoardTest {
     fun setCellValue() {
         board.setCellValue(1,2,5)
         assertEquals("5",board.getCell(1,2).getValue())
-        board.printBoard()
     }
 
     @Test
@@ -190,5 +179,21 @@ class BoardTest {
                 assertEquals(9,board.calculateBox(column,row))
             }
         }
+    }
+
+    @Test
+    fun readFromString(){
+        val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
+        val result = input.replace('.','0')
+        board.read(input)
+        assertEquals(result,board.printout())
+    }
+
+    @Test
+    fun solveSudoku(){
+        val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
+        val result = "246359817917824635538761492792586341361472958854193726185937264429618573673245189"
+        board.read(input)
+        //assertEquals(result,board.solve())
     }
 }
