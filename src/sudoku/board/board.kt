@@ -9,27 +9,13 @@ class Board {
             var column = 0
             Array(9, {
                 column +=1
-                Cell(true, 0, column, row,calculateBox(column,row))
+                Cell(0)
             })
         })
     }
 
     fun getCell(column: Int, row: Int): Cell{
         return cells[row -1][column -1]
-    }
-
-    fun printBoard(){
-        for (row in 1..9){
-            printRow(row)
-        }
-    }
-
-    private fun printRow(row: Int){
-        for (column in 1..9) {
-            cells[row-1][column-1].printCell()
-        }
-        if (row %3==0)
-           println("---------------")
     }
 
     fun calculateBox(column: Int, row: Int): Int {
@@ -40,13 +26,12 @@ class Board {
     }
 
     fun setCellValue(column: Int, row: Int, value: Int) {
-        val box = calculateBox(column, row)
         if (value in 1..9) {
-            val cell = Cell(false, value, column, row, box)
+            val cell = Cell(value)
             cells[row -1][column -1] = cell
         }
         if (value == 0){
-            val cell = Cell(true,0, column, row, box)
+            val cell = Cell(0)
             cells[row -1][column -1] =cell
         }
     }
@@ -71,7 +56,6 @@ class Board {
                 }
             }
         }
-        println(listOfValues.toString())
         return checkState(listOfValues)
     }
 
@@ -82,4 +66,28 @@ class Board {
         return  (uniqueValues.size == values.size)
     }
 
+    fun read(input: String){
+
+        for (row in 1..9) {
+            for (column in 1..9) {
+                val currentChar = input[((row-1)*9+column)-1]
+                if (currentChar.isDigit())
+                    setCellValue(column,row,currentChar.toString().toInt())
+                else
+                    setCellValue(column,row,0)
+            }
+        }
+    }
+
+    fun printout():String{
+        var result = ""
+        for (row in 1..9 )
+            for (column in 1..9)
+                result += getCell(column, row).value
+        return result
+    }
+
+    fun solve():String{
+        return ""
+    }
 }
