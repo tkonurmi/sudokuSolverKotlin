@@ -196,4 +196,25 @@ class BoardTest {
         board.read(input)
         //assertEquals(result,board.solve())
     }
+
+    @Test
+    fun calculateCandidatesIfCellSolved(){
+        val input  =
+                        "2.6.....7" +
+                        ".......3." +
+                        "5..7...92" +
+                        ".9.58.34." +
+                        "...4...5." +
+                        "..4.93..." +
+                        "....3...." +
+                        "...6..57." +
+                        "6....5.89"
+
+        board.read(input)
+        assertEquals(setOf(2),board.calculateCandidates(1,1))
+        assertEquals(setOf(1,3,4,8),board.calculateCandidates(2,1))
+        assertEquals(setOf(6),board.calculateCandidates(3,1))
+        assertEquals(setOf(1,4,6,8),board.calculateCandidates(7,3))
+        assertEquals(setOf(1,2,6),board.calculateCandidates(8,7))
+    }
 }

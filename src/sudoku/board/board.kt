@@ -37,26 +37,39 @@ class Board {
     }
 
     fun checkRowState(row: Int): Boolean{
-        val listOfValues : MutableList<Int> = mutableListOf()
-        (1..9).mapTo(listOfValues) { getCell(it,row).value }
-        return checkState(listOfValues)
+        return checkState(getRowValues(row))
     }
+
+    private fun getRowValues(row: Int): List<Int> {
+        val listOfValues: MutableList<Int> = mutableListOf()
+        (1..9).mapTo(listOfValues) { getCell(it, row).value }
+        return listOfValues
+    }
+
     fun checkColumnState(column: Int): Boolean{
-        val listOfValues : MutableList<Int> = mutableListOf()
+        return checkState(getColumnValues(column))
+    }
+
+    private fun getColumnValues(column: Int): List<Int> {
+        val listOfValues: MutableList<Int> = mutableListOf()
         (1..9).mapTo(listOfValues) { getCell(column, it).value }
-        return checkState(listOfValues)
+        return listOfValues
     }
 
     fun checkBoxState(box: Int): Boolean{
+        return checkState(getBoxValues(box))
+    }
+
+    private fun getBoxValues(box: Int): List<Int> {
         val listOfValues: MutableList<Int> = mutableListOf()
-        for (row in 1..9){
-            for (column in 1..9){
-                if (calculateBox(column,row) == box) {
+        for (row in 1..9) {
+            for (column in 1..9) {
+                if (calculateBox(column, row) == box) {
                     listOfValues.add(getCell(column, row).value)
                 }
             }
         }
-        return checkState(listOfValues)
+        return listOfValues
     }
 
     fun checkState(values: List<Int>): Boolean{
@@ -85,6 +98,21 @@ class Board {
             for (column in 1..9)
                 result += getCell(column, row).value
         return result
+    }
+
+    fun calculateCandidates(column: Int, row: Int): Set<Int>{
+        if (getCell(column, row).value > 0)
+            return setOf(getCell(column, row).value)
+        val box = getBoxValues(calculateBox(column, row)).toSet()
+        val row = getRowValues(row).toSet()
+        val column = getColumnValues(column).toSet()
+        var candidates = (1..9).toMutableSet()
+        candidates.removeAll(box)
+        candidates.removeAll(row)
+        candidates.removeAll(column)
+
+
+        return candidates
     }
 
     fun solve():String{
