@@ -103,14 +103,11 @@ class Board {
     fun calculateCandidates(column: Int, row: Int): Set<Int>{
         if (getCell(column, row).value > 0)
             return setOf(getCell(column, row).value)
-        val box = getBoxValues(calculateBox(column, row)).toSet()
-        val row = getRowValues(row).toSet()
-        val column = getColumnValues(column).toSet()
-        var candidates = (1..9).toMutableSet()
-        candidates.removeAll(box)
-        candidates.removeAll(row)
-        candidates.removeAll(column)
 
+        val candidates = (1..9).toMutableSet()
+        candidates.removeAll(getBoxValues(calculateBox(column, row)).toSet())
+        candidates.removeAll(getRowValues(row).toSet())
+        candidates.removeAll(getColumnValues(column).toSet())
 
         return candidates
     }

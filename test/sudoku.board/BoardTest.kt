@@ -216,5 +216,6 @@ class BoardTest {
         assertEquals(setOf(6),board.calculateCandidates(3,1))
         assertEquals(setOf(1,4,6,8),board.calculateCandidates(7,3))
         assertEquals(setOf(1,2,6),board.calculateCandidates(8,7))
+        assertEquals(setOf(1,2,4,8,9),board.calculateCandidates(6,8))
     }
 }
