@@ -113,7 +113,6 @@ class Board {
     }
 
     fun solve():String{
-        // http://sudopedia.enjoysudoku.com/Solving_Technique.html
         return ""
     }
 }
