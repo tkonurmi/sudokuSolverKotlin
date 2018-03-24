@@ -114,12 +114,12 @@ class Board {
 
     fun solve():String{
         // TODO Loop until nothing changed
-        // TODO Naked Singles
-        // Calculate all candidates and set if cell has only one candidate
+            // TODO Naked Singles
+            // Calculate all candidates and set if cell has only one candidate
 
-        // TODO Hidden singles
-        // Calculate every row/column/box what number is missing and
-        // if only one cell could deliver that set it
+            // TODO Hidden singles
+            // Calculate every row/column/box what number is missing and
+            // if only one cell could deliver that set it
         // End loop
 
         // TODO Guess one cell and play it through
