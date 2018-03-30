@@ -17,7 +17,7 @@ class Board {
 
     fun setCellValue(column: Int, row: Int, value: Int) {
         if (value in 0..9) {
-            val cell = Cell(value,row,column, mutableSetOf<Int>())
+            val cell = Cell(value,row,column, mutableSetOf())
             cells.removeAll(cells.filter { it.row == row && it.column == column })
             cells.add(cell)
             for (peer in getPeers(row,column)){
@@ -78,10 +78,6 @@ class Board {
         }
     }
 
-    fun printCells(){
-        println(cells.map { ""+it.row+":"+it.column })
-    }
-
     fun printout():String{
         var result = ""
         for (row in 1..9 )
@@ -92,7 +88,7 @@ class Board {
 
     fun calculateCandidates(column: Int, row: Int): MutableSet<Int>{
         if (getCell(column, row).value > 0)
-            return mutableSetOf<Int>()
+            return mutableSetOf()
 
         val candidates = (1..9).toMutableSet()
         candidates.removeAll(getBoxValues(getCell(column, row).box).map { it.value }.toSet())
@@ -103,6 +99,7 @@ class Board {
     }
 
     fun getPeers(row: Int, column: Int): MutableSet<Cell>{
+        // TODO needs tests
         val peers = cells.filter { it.row == row }.toMutableSet()
         peers.addAll(cells.filter { it.column == column }.toList())
         peers.addAll(cells.filter { getCell(it.column,it.row).box == getCell(column,row).box }.toList())
@@ -111,7 +108,7 @@ class Board {
     }
 
     fun tryNakedSingles(): Boolean{
-        var candidateList = cells.filter { it.candidates.size == 1}
+        val candidateList = cells.filter { it.candidates.size == 1}
         if (candidateList.isEmpty())
             return false
         else {
@@ -125,6 +122,27 @@ class Board {
     }
 
     private fun tryHiddenSingles(): Boolean {
+        for (value in 1..9) {
+            if (checkCellsForHiddenSingles(getRowValues(value), value)) return true
+            if (checkCellsForHiddenSingles(getColumnValues(value), value)) return true
+            if (checkCellsForHiddenSingles(getBoxValues(value), value)) return true
+        }
+        return false
+    }
+
+    private fun checkCellsForHiddenSingles(checkedCells: List<Cell>, row: Int): Boolean {
+        val hiddenSingle = checkedCells
+                .map { it.candidates }
+                .flatten()
+                .groupBy { it }
+                .filter { it.value.size == 1 }.values.flatten()
+        if (hiddenSingle.isNotEmpty()) {
+            val cell = checkedCells.find { it.candidates.contains(hiddenSingle.first()) }
+            if (cell != null) {
+                setNewCellValue(cell, hiddenSingle.first())
+                return true
+            }
+        }
         return false
     }
 
@@ -140,6 +158,7 @@ class Board {
             if (changed)
                 continue
         }
+        
         // TODO Loop until nothing changed
             // TODO Naked Singles
             // Calculate all candidates and set if cell has only one candidate
@@ -153,6 +172,6 @@ class Board {
         // (Remember all cell numbers set after this point)
 
 
-        return ""
+        return printout()
     }
 }
