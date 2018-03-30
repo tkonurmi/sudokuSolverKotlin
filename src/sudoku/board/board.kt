@@ -12,7 +12,7 @@ class Board {
     }
 
     fun getCell(column: Int, row: Int): Cell{
-        return cells.filter { it.row == row && it.column == column }.first()
+        return cells.first { it.row == row && it.column == column }
     }
 
     fun calculateBox(column: Int, row: Int): Int {
@@ -109,8 +109,8 @@ class Board {
         return candidates
     }
 
-    fun getPeers(row: Int, column: Int): MutableList<Cell>{
-        var peers = cells.filter { it.row == row }.toMutableList()
+    private fun getPeers(row: Int, column: Int): MutableList<Cell>{
+        val peers = cells.filter { it.row == row }.toMutableList()
         peers.addAll(cells.filter { it.column == column }.toList())
         peers.addAll(cells.filter { calculateBox(it.column,it.row) == calculateBox(column,row) }.toList())
         return peers
@@ -127,7 +127,7 @@ class Board {
         // End loop
 
         // TODO Guess one cell and play it through
-        // (Remember all cell nubers set after this point)
+        // (Remember all cell numbers set after this point)
 
 
         return ""
