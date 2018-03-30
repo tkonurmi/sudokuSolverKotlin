@@ -17,20 +17,24 @@ class Board {
 
     fun setCellValue(column: Int, row: Int, value: Int) {
         if (value in 0..9) {
-            val cell = Cell(value,row,column,calculateCandidates(column, row))
+            val cell = Cell(value,row,column, mutableSetOf<Int>())
             cells.removeAll(cells.filter { it.row == row && it.column == column })
             cells.add(cell)
             for (peer in getPeers(row,column)){
-                cell.candidates = calculateCandidates(cell.column,cell.row)
+                peer.candidates = calculateCandidates(peer.column,peer.row)
             }
         }
+    }
+
+    private fun setNewCellValue(cell: Cell, value: Int){
+        setCellValue(cell.column,cell.row,value)
     }
 
     fun checkRowState(row: Int): Boolean{
         return checkState(getRowValues(row).map { it.value })
     }
 
-    private fun getRowValues(row: Int): List<Cell> {
+    fun getRowValues(row: Int): List<Cell> {
         val listOfValues: MutableList<Cell> = mutableListOf()
         (1..9).mapTo(listOfValues) { getCell(it, row) }
         return listOfValues
@@ -40,7 +44,7 @@ class Board {
         return checkState(getColumnValues(column).map { it.value })
     }
 
-    private fun getColumnValues(column: Int): List<Cell> {
+    fun getColumnValues(column: Int): List<Cell> {
         val listOfValues: MutableList<Cell> = mutableListOf()
         (1..9).mapTo(listOfValues) { getCell(column, it) }
         return listOfValues
@@ -50,7 +54,7 @@ class Board {
         return checkState(getBoxValues(box).map { it.value })
     }
 
-    private fun getBoxValues(box: Int): List<Cell> {
+    fun getBoxValues(box: Int): List<Cell> {
         return cells.filter { it.box == box }.toList()
     }
 
@@ -74,6 +78,10 @@ class Board {
         }
     }
 
+    fun printCells(){
+        println(cells.map { ""+it.row+":"+it.column })
+    }
+
     fun printout():String{
         var result = ""
         for (row in 1..9 )
@@ -84,7 +92,7 @@ class Board {
 
     fun calculateCandidates(column: Int, row: Int): MutableSet<Int>{
         if (getCell(column, row).value > 0)
-            return mutableSetOf(getCell(column, row).value)
+            return mutableSetOf<Int>()
 
         val candidates = (1..9).toMutableSet()
         candidates.removeAll(getBoxValues(getCell(column, row).box).map { it.value }.toSet())
@@ -94,14 +102,44 @@ class Board {
         return candidates
     }
 
-    private fun getPeers(row: Int, column: Int): MutableList<Cell>{
-        val peers = cells.filter { it.row == row }.toMutableList()
+    fun getPeers(row: Int, column: Int): MutableSet<Cell>{
+        val peers = cells.filter { it.row == row }.toMutableSet()
         peers.addAll(cells.filter { it.column == column }.toList())
         peers.addAll(cells.filter { getCell(it.column,it.row).box == getCell(column,row).box }.toList())
+        peers.remove(getCell(column, row))
         return peers
     }
 
-    fun solve():String{
+    fun tryNakedSingles(): Boolean{
+        var candidateList = cells.filter { it.candidates.size == 1}
+        if (candidateList.isEmpty())
+            return false
+        else {
+            val cell = candidateList.first()
+            if (cell != null) {
+                setNewCellValue(cell, cell.candidates.first())
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun tryHiddenSingles(): Boolean {
+        return false
+    }
+
+    fun solve():String {
+        var changed = true
+
+        while (changed){
+            println(printout())
+            changed = tryNakedSingles()
+            if (changed)
+                continue
+            changed = tryHiddenSingles()
+            if (changed)
+                continue
+        }
         // TODO Loop until nothing changed
             // TODO Naked Singles
             // Calculate all candidates and set if cell has only one candidate
