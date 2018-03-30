@@ -15,13 +15,6 @@ class Board {
         return cells.first { it.row == row && it.column == column }
     }
 
-    fun calculateBox(column: Int, row: Int): Int {
-        val rowSum = ((row-1)/3)*3
-        val colSum = ((column-1)/3)+1
-
-        return (rowSum+colSum)
-    }
-
     fun setCellValue(column: Int, row: Int, value: Int) {
         if (value in 0..9) {
             val cell = Cell(value,row,column,calculateCandidates(column, row))
@@ -58,15 +51,7 @@ class Board {
     }
 
     private fun getBoxValues(box: Int): List<Cell> {
-        val listOfValues: MutableList<Cell> = mutableListOf()
-        for (row in 1..9) {
-            for (column in 1..9) {
-                if (calculateBox(column, row) == box) {
-                    listOfValues.add(getCell(column, row))
-                }
-            }
-        }
-        return listOfValues
+        return cells.filter { it.box == box }.toList()
     }
 
     fun checkState(values: List<Int>): Boolean{
@@ -102,7 +87,7 @@ class Board {
             return mutableSetOf(getCell(column, row).value)
 
         val candidates = (1..9).toMutableSet()
-        candidates.removeAll(getBoxValues(calculateBox(column, row)).map { it.value }.toSet())
+        candidates.removeAll(getBoxValues(getCell(column, row).box).map { it.value }.toSet())
         candidates.removeAll(getRowValues(row).map { it.value }.toSet())
         candidates.removeAll(getColumnValues(column).map { it.value }.toSet())
 
@@ -112,7 +97,7 @@ class Board {
     private fun getPeers(row: Int, column: Int): MutableList<Cell>{
         val peers = cells.filter { it.row == row }.toMutableList()
         peers.addAll(cells.filter { it.column == column }.toList())
-        peers.addAll(cells.filter { calculateBox(it.column,it.row) == calculateBox(column,row) }.toList())
+        peers.addAll(cells.filter { getCell(it.column,it.row).box == getCell(column,row).box }.toList())
         return peers
     }
 
