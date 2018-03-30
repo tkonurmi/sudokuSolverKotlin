@@ -1,21 +1,18 @@
 package sudoku.board
 
 class Board {
-    private var cells: Array<Array<Cell>>
+    private var cells = mutableListOf<Cell>()
+
     init {
-        var row = 0
-        cells = Array(9, {
-            row += 1
-            var column = 0
-            Array(9, {
-                column +=1
-                Cell(0)
-            })
-        })
+        for (row in 1..9){
+            for (column in 1..9){
+                cells.add(Cell(0,row,column,(1..9).toMutableSet()))
+            }
+        }
     }
 
     fun getCell(column: Int, row: Int): Cell{
-        return cells[row -1][column -1]
+        return cells.filter { it.row == row && it.column == column }.first()
     }
 
     fun calculateBox(column: Int, row: Int): Int {
@@ -26,46 +23,46 @@ class Board {
     }
 
     fun setCellValue(column: Int, row: Int, value: Int) {
-        if (value in 1..9) {
-            val cell = Cell(value)
-            cells[row -1][column -1] = cell
-        }
-        if (value == 0){
-            val cell = Cell(0)
-            cells[row -1][column -1] =cell
+        if (value in 0..9) {
+            val cell = Cell(value,row,column,calculateCandidates(column, row))
+            cells.removeAll(cells.filter { it.row == row && it.column == column })
+            cells.add(cell)
+            for (peer in getPeers(row,column)){
+                cell.candidates = calculateCandidates(cell.column,cell.row)
+            }
         }
     }
 
     fun checkRowState(row: Int): Boolean{
-        return checkState(getRowValues(row))
+        return checkState(getRowValues(row).map { it.value })
     }
 
-    private fun getRowValues(row: Int): List<Int> {
-        val listOfValues: MutableList<Int> = mutableListOf()
-        (1..9).mapTo(listOfValues) { getCell(it, row).value }
+    private fun getRowValues(row: Int): List<Cell> {
+        val listOfValues: MutableList<Cell> = mutableListOf()
+        (1..9).mapTo(listOfValues) { getCell(it, row) }
         return listOfValues
     }
 
     fun checkColumnState(column: Int): Boolean{
-        return checkState(getColumnValues(column))
+        return checkState(getColumnValues(column).map { it.value })
     }
 
-    private fun getColumnValues(column: Int): List<Int> {
-        val listOfValues: MutableList<Int> = mutableListOf()
-        (1..9).mapTo(listOfValues) { getCell(column, it).value }
+    private fun getColumnValues(column: Int): List<Cell> {
+        val listOfValues: MutableList<Cell> = mutableListOf()
+        (1..9).mapTo(listOfValues) { getCell(column, it) }
         return listOfValues
     }
 
     fun checkBoxState(box: Int): Boolean{
-        return checkState(getBoxValues(box))
+        return checkState(getBoxValues(box).map { it.value })
     }
 
-    private fun getBoxValues(box: Int): List<Int> {
-        val listOfValues: MutableList<Int> = mutableListOf()
+    private fun getBoxValues(box: Int): List<Cell> {
+        val listOfValues: MutableList<Cell> = mutableListOf()
         for (row in 1..9) {
             for (column in 1..9) {
                 if (calculateBox(column, row) == box) {
-                    listOfValues.add(getCell(column, row).value)
+                    listOfValues.add(getCell(column, row))
                 }
             }
         }
@@ -100,14 +97,14 @@ class Board {
         return result
     }
 
-    fun calculateCandidates(column: Int, row: Int): Set<Int>{
+    fun calculateCandidates(column: Int, row: Int): MutableSet<Int>{
         if (getCell(column, row).value > 0)
-            return setOf(getCell(column, row).value)
+            return mutableSetOf(getCell(column, row).value)
 
         val candidates = (1..9).toMutableSet()
-        candidates.removeAll(getBoxValues(calculateBox(column, row)).toSet())
-        candidates.removeAll(getRowValues(row).toSet())
-        candidates.removeAll(getColumnValues(column).toSet())
+        candidates.removeAll(getBoxValues(calculateBox(column, row)).map { it.value }.toSet())
+        candidates.removeAll(getRowValues(row).map { it.value }.toSet())
+        candidates.removeAll(getColumnValues(column).map { it.value }.toSet())
 
         return candidates
     }

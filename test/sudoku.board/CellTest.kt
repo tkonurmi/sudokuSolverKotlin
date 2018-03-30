@@ -7,13 +7,13 @@ class CellTest {
 
     @Test
     fun testGetValue(){
-        val cell = Cell(3)
+        val cell = Cell(3,1,1, (1..9).toMutableSet() )
         assertEquals("3", cell.getValue())
     }
 
     @Test
     fun testGetValueEmpty(){
-        val cell = Cell(0)
+        val cell = Cell(0,1,1, (1..9).toMutableSet() )
         assertEquals(".", cell.getValue())
     }
 
