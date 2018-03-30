@@ -85,7 +85,6 @@ class BoardTest {
                 board.setCellValue(column, row, value++)
             }
         }
-
         assert(board.checkBoxState(1))
     }
 
@@ -100,8 +99,6 @@ class BoardTest {
         val values: List<Int> = listOf(1,2,3,5,5,6,7,8,9)
         assertFalse(board.checkState(values))
     }
-
-
 
     @Test
     fun readFromString(){
@@ -164,7 +161,7 @@ class BoardTest {
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
         val result = "246359817917824635538761492792586341361472958854193726185937264429618573673245189"
         board.read(input)
-        //assertEquals(result,board.solve())
+        assertEquals(result,board.solve())
         
     }
 
