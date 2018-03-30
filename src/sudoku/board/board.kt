@@ -109,6 +109,13 @@ class Board {
         return candidates
     }
 
+    fun getPeers(row: Int, column: Int): MutableList<Cell>{
+        var peers = cells.filter { it.row == row }.toMutableList()
+        peers.addAll(cells.filter { it.column == column }.toList())
+        peers.addAll(cells.filter { calculateBox(it.column,it.row) == calculateBox(column,row) }.toList())
+        return peers
+    }
+
     fun solve():String{
         // TODO Loop until nothing changed
             // TODO Naked Singles
