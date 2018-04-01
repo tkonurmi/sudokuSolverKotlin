@@ -9,26 +9,26 @@ class BoardTest {
 
     @Test
     fun getCellReturnsEmptyValue() {
-        assertEquals(".",board.getCell(1,1).getValue())
+        assertEquals(".",board.getCell(1, 1).getValue())
     }
 
     @Test
     fun setCellValue() {
         board.setCellValue(1,2,5)
-        assertEquals("5",board.getCell(1,2).getValue())
+        assertEquals("5",board.getCell(2, 1).getValue())
     }
 
     @Test
     fun setCellValueNegative() {
-        val oldValue = board.getCell(1,2).getValue()
+        val oldValue = board.getCell(2, 1).getValue()
         board.setCellValue(1,2,-1)
-        assertEquals(oldValue,board.getCell(1,2).getValue())
+        assertEquals(oldValue,board.getCell(2, 1).getValue())
     }
 
     @Test
     fun setCellEmpty() {
         board.setCellValue(1,2,0)
-        assertEquals(".",board.getCell(1,2).getValue())
+        assertEquals(".",board.getCell(2, 1).getValue())
     }
 
     @Test
@@ -114,7 +114,7 @@ class BoardTest {
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
         board.read(input)
         for (column in 1..9)
-            assertEquals(board.getColumnValues(column).size,9)
+            assertEquals(board.getColumnCells(column).size,9)
     }
 
     @Test
@@ -122,7 +122,7 @@ class BoardTest {
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
         board.read(input)
         for (box in 1..9)
-            assertEquals(board.getBoxValues(box).size,9)
+            assertEquals(board.getBoxCells(box).size,9)
     }
 
     @Test
@@ -130,16 +130,24 @@ class BoardTest {
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
         board.read(input)
         for (row in 1..9)
-            assertEquals(board.getRowValues(row).size,9)
+            assertEquals(board.getRowCells(row).size,9)
     }
 
     @Test
     fun testGetPeers() {
         val input  = "010003008000500903000029000080000609070156030406000070000270000302001000600300090"
         board.read(input)
-        for (row in 1..9)
-            for (column in 1..9)
+        for (row in 1..9) {
+            for (column in 1..9) {
                 assert(board.getPeers(row, column).size == 20)
+                assert(board.getPeers(row,column).containsAll(board.getRowCells(row).filter { it.column != column }))
+                assert(!board.getPeers(row,column).contains(board.getCell(row, column)))
+                assert(board.getPeers(row,column).containsAll(board.getColumnCells(column).filter { it.row != row }))
+                assert(!board.getPeers(row,column).contains(board.getCell(row, column)))
+                assert(board.getPeers(row,column).containsAll(board.getBoxCells(board.getCell(row, column).box).filter { it.column != column || it.row != row}))
+                assert(!board.getPeers(row, column).contains(board.getCell(row, column)))
+            }
+        }
     }
 
     @Test
