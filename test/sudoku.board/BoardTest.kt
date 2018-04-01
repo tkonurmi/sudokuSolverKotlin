@@ -166,7 +166,7 @@ class BoardTest {
 
     private fun solveOneSudoku(input:String, output:String):Boolean{
         board.readPuzzleIn(input)
-        if (output == board.solve())
+        if (output == board.solvePuzzle())
             return true
 
         println("Input:  $input")

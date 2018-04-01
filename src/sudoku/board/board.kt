@@ -145,7 +145,7 @@ class Board {
         return false
     }
 
-    fun solve():String {
+    fun solvePuzzle():String {
         var changed = true
 
         while (changed){
