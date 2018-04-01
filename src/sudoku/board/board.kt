@@ -35,9 +35,7 @@ class Board {
     }
 
     fun getRowCells(row: Int): List<Cell> {
-        val listOfValues: MutableList<Cell> = mutableListOf()
-        (1..9).mapTo(listOfValues) { getCell(row, it) }
-        return listOfValues
+        return cells.filter { it.row == row }.toList()
     }
 
     fun checkColumnState(column: Int): Boolean{
@@ -45,9 +43,7 @@ class Board {
     }
 
     fun getColumnCells(column: Int): List<Cell> {
-        val listOfValues: MutableList<Cell> = mutableListOf()
-        (1..9).mapTo(listOfValues) { getCell(it, column) }
-        return listOfValues
+        return cells.filter { it.column == column }.toList()
     }
 
     fun checkBoxState(box: Int): Boolean{
