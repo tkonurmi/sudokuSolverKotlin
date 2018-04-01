@@ -2,6 +2,7 @@ package sudoku.board
 
 import org.junit.Assert.*
 import org.junit.Test
+import java.io.File
 
 class BoardTest {
     private var board = Board()
@@ -155,15 +156,41 @@ class BoardTest {
         assert(!board.tryNakedSingles())
     }
 
+    private fun solveOneSudoku(input:String, output:String):Boolean{
+        board.read(input)
+        if (output.equals(board.solve()))
+            return true
+
+        println("Input:  "+input)
+        println("Solved: "+board.printout())
+        println("Output: "+output)
+        println()
+        return false
+    }
+
+    data class SudokuTest(val input: String, val output: String) {
+        val emptyCount = input.count { empty: Char -> empty == '0' || empty == '.' }
+    }
 
     @Test
-    fun solveSudoku(){
-        val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
-        val result = "246359817917824635538761492792586341361472958854193726185937264429618573673245189"
-        board.read(input)
-        assertEquals(result,board.solve())
-        
+    fun testSolveSudokuWithMultipleInputs(){
+        var testSudokus = mutableListOf<SudokuTest>()
+        File("sudoku_puzzles.txt").readLines().map { line: String -> testSudokus.add(parseSudokuFromFile(line)) }
+
+        var solvecount=0
+        var failcount=0
+        for (sutokuTest in testSudokus){
+            if (solveOneSudoku(sutokuTest.input,sutokuTest.output))
+                solvecount++
+            else
+                failcount++
+        }
+        println("Solved $solvecount out of " + (solvecount+failcount) + " (" + (100*(solvecount)/(solvecount+failcount))+"%)")
+
+
     }
+
+    private fun parseSudokuFromFile(line: String) = SudokuTest(line.split(",").first(), line.split(",").last())
 
     @Test
     fun calculateCandidatesIfCellSolved(){
