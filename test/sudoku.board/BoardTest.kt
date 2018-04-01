@@ -158,34 +158,32 @@ class BoardTest {
 
     private fun solveOneSudoku(input:String, output:String):Boolean{
         board.read(input)
-        if (output.equals(board.solve()))
+        if (output == board.solve())
             return true
 
-        println("Input:  "+input)
+        println("Input:  $input")
         println("Solved: "+board.printout())
-        println("Output: "+output)
+        println("Output: $output")
         println()
         return false
     }
 
-    data class SudokuTest(val input: String, val output: String) {
-        val emptyCount = input.count { empty: Char -> empty == '0' || empty == '.' }
-    }
+    data class SudokuTest(val input: String, val output: String)
 
     @Test
     fun testSolveSudokuWithMultipleInputs(){
-        var testSudokus = mutableListOf<SudokuTest>()
-        File("sudoku_puzzles.txt").readLines().map { line: String -> testSudokus.add(parseSudokuFromFile(line)) }
+        val sudokuTests = mutableListOf<SudokuTest>()
+        File("sudoku_puzzles.txt").readLines().map { line: String -> sudokuTests.add(parseSudokuFromFile(line)) }
 
-        var solvecount=0
-        var failcount=0
-        for (sutokuTest in testSudokus){
-            if (solveOneSudoku(sutokuTest.input,sutokuTest.output))
-                solvecount++
+        var solveCount=0
+        var failCount=0
+        for (sudokuTest in sudokuTests){
+            if (solveOneSudoku(sudokuTest.input,sudokuTest.output))
+                solveCount++
             else
-                failcount++
+                failCount++
         }
-        println("Solved $solvecount out of " + (solvecount+failcount) + " (" + (100*(solvecount)/(solvecount+failcount))+"%)")
+        println("Solved $solveCount out of " + (solveCount+failCount) + " (" + (100*(solveCount)/(solveCount+failCount))+"%)")
 
 
     }
