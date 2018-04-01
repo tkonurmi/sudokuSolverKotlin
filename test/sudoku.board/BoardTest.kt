@@ -105,14 +105,14 @@ class BoardTest {
     fun readFromString(){
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
         val result = input.replace('.','0')
-        board.read(input)
-        assertEquals(result,board.printout())
+        board.readPuzzleIn(input)
+        assertEquals(result,board.returnCurrentValues())
     }
 
     @Test
     fun testGetColumnValues(){
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
-        board.read(input)
+        board.readPuzzleIn(input)
         for (column in 1..9)
             assertEquals(board.getColumnCells(column).size,9)
     }
@@ -120,7 +120,7 @@ class BoardTest {
     @Test
     fun testGetBoxValues(){
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
-        board.read(input)
+        board.readPuzzleIn(input)
         for (box in 1..9)
             assertEquals(board.getBoxCells(box).size,9)
     }
@@ -128,7 +128,7 @@ class BoardTest {
     @Test
     fun testGetRowValues(){
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
-        board.read(input)
+        board.readPuzzleIn(input)
         for (row in 1..9)
             assertEquals(board.getRowCells(row).size,9)
     }
@@ -136,7 +136,7 @@ class BoardTest {
     @Test
     fun testGetPeers() {
         val input  = "010003008000500903000029000080000609070156030406000070000270000302001000600300090"
-        board.read(input)
+        board.readPuzzleIn(input)
         for (row in 1..9) {
             for (column in 1..9) {
                 assert(board.getPeers(row, column).size == 20)
@@ -153,24 +153,24 @@ class BoardTest {
     @Test
     fun testNakedSingles() {
         val input  = "010003008000500903000029000080000609070156030406000070000270000302001000600300090"
-        board.read(input)
+        board.readPuzzleIn(input)
         assert(board.tryNakedSingles())
     }
 
     @Test
     fun testNakedSinglesFalse() {
         val input  = "010003008000500903000029000080000609279156834406000070000270000302001000600300090"
-        board.read(input)
+        board.readPuzzleIn(input)
         assert(!board.tryNakedSingles())
     }
 
     private fun solveOneSudoku(input:String, output:String):Boolean{
-        board.read(input)
+        board.readPuzzleIn(input)
         if (output == board.solve())
             return true
 
         println("Input:  $input")
-        println("Solved: "+board.printout())
+        println("Solved: "+board.returnCurrentValues())
         println("Output: $output")
         println()
         return false
@@ -211,7 +211,7 @@ class BoardTest {
                         "...6..57." +
                         "6....5.89"
 
-        board.read(input)
+        board.readPuzzleIn(input)
         assertEquals(mutableSetOf<Int>(),board.calculateCandidates(1,1))
         assertEquals(setOf(1,3,4,8),board.calculateCandidates(2,1))
         assertEquals(mutableSetOf<Int>(),board.calculateCandidates(3,1))

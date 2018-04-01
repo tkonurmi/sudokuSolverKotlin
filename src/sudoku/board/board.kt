@@ -65,7 +65,7 @@ class Board {
         return  (uniqueValues.size == values.size)
     }
 
-    fun read(input: String){
+    fun readPuzzleIn(input: String){
 
         for (row in 1..9) {
             for (column in 1..9) {
@@ -78,7 +78,7 @@ class Board {
         }
     }
 
-    fun printout():String{
+    fun returnCurrentValues():String{
         var result = ""
         for (row in 1..9 )
             for (column in 1..9)
@@ -159,6 +159,6 @@ class Board {
 
         // TODO Guess one cell and play it through
         // (Remember all cell numbers set after this point)
-        return printout()
+        return returnCurrentValues()
     }
 }
