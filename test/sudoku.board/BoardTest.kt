@@ -219,4 +219,14 @@ class BoardTest {
         assertEquals(setOf(1,2,6),board.calculateCandidates(8,7))
         assertEquals(setOf(1,2,4,8,9),board.calculateCandidates(6,8))
     }
+
+    @Test
+    fun solvesudoku(){
+        val  input = "080001090030000248500300010650000020010020000400700509000000000000604800001039000"
+
+        board.readPuzzleIn(input)
+        println(board.returnCurrentValues())
+        board.solvePuzzle()
+        println(board.returnCurrentValues())
+    }
 }
