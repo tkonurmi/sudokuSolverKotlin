@@ -6,6 +6,7 @@ import java.io.File
 
 class BoardTest {
     private var board = Board()
+    private var sudokuSolver = SudokuSolver()
 
     @Test
     fun getCellReturnsEmptyValue() {
@@ -105,38 +106,39 @@ class BoardTest {
     fun readFromString(){
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
         val result = input.replace('.','0')
-        board.readPuzzleIn(input)
-        assertEquals(result,board.returnCurrentValues())
+        sudokuSolver.readPuzzleIn(input)
+        assertEquals(result,sudokuSolver.board().returnCurrentValues())
     }
 
     @Test
     fun testGetColumnValues(){
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
-        board.readPuzzleIn(input)
+        sudokuSolver.readPuzzleIn(input)
         for (column in 1..9)
-            assertEquals(board.getColumnCells(column).size,9)
+            assertEquals(sudokuSolver.board().getColumnCells(column).size,9)
     }
 
     @Test
     fun testGetBoxValues(){
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
-        board.readPuzzleIn(input)
+        sudokuSolver.readPuzzleIn(input)
         for (box in 1..9)
-            assertEquals(board.getBoxCells(box).size,9)
+            assertEquals(sudokuSolver.board().getBoxCells(box).size,9)
     }
 
     @Test
     fun testGetRowValues(){
         val input  = "2.6.....7.......3.5..7...92.9.58.34....4...5...4.93.......3.......6..57.6....5.89"
-        board.readPuzzleIn(input)
+        sudokuSolver.readPuzzleIn(input)
         for (row in 1..9)
-            assertEquals(board.getRowCells(row).size,9)
+            assertEquals(sudokuSolver.board().getRowCells(row).size,9)
     }
 
     @Test
     fun testGetPeers() {
         val input  = "010003008000500903000029000080000609070156030406000070000270000302001000600300090"
-        board.readPuzzleIn(input)
+        sudokuSolver.readPuzzleIn(input)
+        board = sudokuSolver.board()
         for (row in 1..9) {
             for (column in 1..9) {
                 assert(board.getPeers(row, column).size == 20)
@@ -153,24 +155,24 @@ class BoardTest {
     @Test
     fun testNakedSingles() {
         val input  = "010003008000500903000029000080000609070156030406000070000270000302001000600300090"
-        board.readPuzzleIn(input)
-        assert(board.tryNakedSingles())
+        sudokuSolver.readPuzzleIn(input)
+        assert(sudokuSolver.board().tryNakedSingles())
     }
 
     @Test
     fun testNakedSinglesFalse() {
         val input  = "010003008000500903000029000080000609279156834406000070000270000302001000600300090"
-        board.readPuzzleIn(input)
-        assert(!board.tryNakedSingles())
+        sudokuSolver.readPuzzleIn(input)
+        assert(!sudokuSolver.board().tryNakedSingles())
     }
 
     private fun solveOneSudoku(input:String, output:String):Boolean{
-        board.readPuzzleIn(input)
-        if (output == board.solvePuzzle())
+        sudokuSolver.readPuzzleIn(input)
+        if (output == sudokuSolver.solvePuzzle())
             return true
 
         println("Input:  $input")
-        println("Solved: "+board.returnCurrentValues())
+        println("Solved: "+sudokuSolver.board().returnCurrentValues())
         println("Output: $output")
         println()
         return false
@@ -211,7 +213,8 @@ class BoardTest {
                         "...6..57." +
                         "6....5.89"
 
-        board.readPuzzleIn(input)
+        sudokuSolver.readPuzzleIn(input)
+        board = sudokuSolver.board()
         assertEquals(mutableSetOf<Int>(),board.calculateCandidates(1,1))
         assertEquals(setOf(1,3,4,8),board.calculateCandidates(2,1))
         assertEquals(mutableSetOf<Int>(),board.calculateCandidates(3,1))
@@ -223,10 +226,11 @@ class BoardTest {
     @Test
     fun solvesudoku(){
         val  input = "080001090030000248500300010650000020010020000400700509000000000000604800001039000"
-
-        board.readPuzzleIn(input)
-        println(board.returnCurrentValues())
-        board.solvePuzzle()
-        println(board.returnCurrentValues())
+        //val  input = "..27...8..5..3......6..59...7..9.2545....8..3....7.........64..43......8..5.2...."
+        //val  input = "206000007000000030500700092090580340000400050004093000000030000000600570600005089"
+        sudokuSolver.readPuzzleIn(input)
+        println(sudokuSolver.board().returnCurrentValues())
+        sudokuSolver.solvePuzzle()
+        println(sudokuSolver.board().returnCurrentValues())
     }
 }

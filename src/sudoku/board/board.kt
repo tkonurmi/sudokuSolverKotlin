@@ -1,5 +1,7 @@
 package sudoku.board
 
+import java.util.*
+
 class Board {
     private var cells = mutableListOf<Cell>()
 
@@ -57,21 +59,22 @@ class Board {
     fun checkState(values: List<Int>): Boolean{
         val uniqueValues : MutableSet<Int> = mutableSetOf()
         uniqueValues.addAll(values)
+        if (values.contains(0))
+            return false
 
         return  (uniqueValues.size == values.size)
     }
 
-    fun readPuzzleIn(input: String){
-
-        for (row in 1..9) {
-            for (column in 1..9) {
-                val currentChar = input[((row-1)*9+column)-1]
-                if (currentChar.isDigit())
-                    setCellValue(column,row,currentChar.toString().toInt())
-                else
-                    setCellValue(column,row,0)
-            }
+    fun isSolved(): Boolean {
+        for (number in 1..9) {
+            if (!checkBoxState(number))
+                return false
+            if (!checkColumnState(number))
+                return false
+            if (!checkRowState(number))
+                return false
         }
+        return true
     }
 
     fun returnCurrentValues():String{
@@ -116,7 +119,7 @@ class Board {
         return false
     }
 
-    private fun tryHiddenSingles(): Boolean {
+    fun tryHiddenSingles(): Boolean {
         for (value in 1..9) {
             if (checkCellsForHiddenSingles(getRowCells(value), value)) return true
             if (checkCellsForHiddenSingles(getColumnCells(value), value)) return true
@@ -141,20 +144,18 @@ class Board {
         return false
     }
 
-    fun solvePuzzle():String {
-        var changed = true
+    fun guessOne(): Boolean {
+        for (candidateSize in 2..9) {
+            val candidateList = cells.filter { it.candidates.size == candidateSize}
+            if (!candidateList.isEmpty()){
+                val candidate = candidateList.getRandomElement()
+                setCellValue(candidate.column,candidate.row,candidate.candidates.shuffled().first())
 
-        while (changed){
-            changed = tryNakedSingles()
-            if (changed)
-                continue
-            changed = tryHiddenSingles()
-            if (changed)
-                continue
+                return true
+            }
         }
-
-        // TODO Guess one cell and play it through
-        // (Remember all cell numbers set after this point)
-        return returnCurrentValues()
+        return false
     }
+
+    private fun <E> List<E>.getRandomElement() = this[Random().nextInt(this.size)]
 }
